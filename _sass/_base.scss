@@ -1582,21 +1582,34 @@ mjx-container[jax="CHTML"][display="true"] {
 }
 
 .post-list {
+  margin-top: 1rem;
+
   li {
+    list-style: none;
     border-bottom: 1px solid var(--global-divider-color);
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 1.4rem 0;
+  }
+
+  .post-meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.3rem;
+  }
+
+  h3 {
+    margin: 0;
   }
 
   .post-title {
+    font-size: 1.3rem;
     font-weight: 600;
-  }
-
-  .post-tags a {
-    text-decoration: none;
+    color: var(--global-text-color);
+    transition: color 0.2s ease-in-out;
 
     &:hover {
       color: var(--global-theme-color);
+      text-decoration: none;
     }
   }
 }
