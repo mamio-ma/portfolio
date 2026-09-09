@@ -1,3 +1,21 @@
+/* --- nav bar: consistent link styling + tidy alignment (post-review fix) --- */
+.link {
+    color: #CCD6F6;
+    text-decoration: none;
+    cursor: pointer;
+}
+.link:hover {
+    color: #64ffda;
+}
+body #display-bar {
+    justify-content: flex-start;
+    gap: 1.5rem;
+    align-items: baseline;
+}
+body header div.first-menu-bar {
+    margin: 1rem 0 0 0;
+}
+
 @media screen and (max-width: 991px) {
     select {
             appearance: none;
