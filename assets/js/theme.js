@@ -256,8 +256,10 @@ let transTheme = () => {
 // "system". Default is "system".
 let determineThemeSetting = () => {
   let themeSetting = localStorage.getItem("theme");
+  // Toggle is hidden site-wide; force light so no one is stranded on the
+  // uncustomised dark theme (and system-dark visitors still get light).
   if (themeSetting != "dark" && themeSetting != "light" && themeSetting != "system") {
-    themeSetting = "system";
+    themeSetting = "light";
   }
   return themeSetting;
 };

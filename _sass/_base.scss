@@ -1613,3 +1613,8 @@ mjx-container[jax="CHTML"][display="true"] {
     }
   }
 }
+
+/* Hide the theme toggle button (kept enabled so theme.js still loads) */
+#light-toggle {
+  display: none !important;
+}
