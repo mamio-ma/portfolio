@@ -1,4 +1,7 @@
 /* --- nav bar: consistent link styling + tidy alignment (post-review fix) --- */
+html {
+    scroll-behavior: smooth;
+}
 .link {
     color: #CCD6F6;
     text-decoration: none;
