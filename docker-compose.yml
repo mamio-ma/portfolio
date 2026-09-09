@@ -19,3 +19,24 @@ services:
       - .:/srv/jekyll
     environment:
       - JEKYLL_ENV=development
+    # Override the image's default entrypoint (/tmp/entry_point.sh). That script's
+    # manage_gemfile_lock() runs `git ls-files --error-unmatch Gemfile.lock` to decide
+    # whether to keep Gemfile.lock. Since site/ is vendored into a PARENT repo with no
+    # .git of its own (and only site/ is bind-mounted here), that check always fails
+    # inside the container, so the entrypoint deletes Gemfile.lock and bundler then
+    # fails to find the git-sourced jekyll-terser gem. Bypassing the entrypoint and
+    # running jekyll serve directly (same flags the entrypoint used) keeps
+    # Gemfile.lock intact and uses the gems already baked into the image.
+    entrypoint: []
+    command:
+      - bundle
+      - exec
+      - jekyll
+      - serve
+      - --watch
+      - --port=8080
+      - --host=0.0.0.0
+      - --livereload
+      - --verbose
+      - --trace
+      - --force_polling
