@@ -1,4 +1,4 @@
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 991px) {
     select {
             appearance: none;
             -webkit-appearance: none;
@@ -372,7 +372,7 @@
 }
 
 /* PC */
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 992px) {
     select {
             appearance: none;
             -webkit-appearance: none;
