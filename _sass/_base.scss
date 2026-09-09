@@ -1618,3 +1618,11 @@ mjx-container[jax="CHTML"][display="true"] {
 #light-toggle {
   display: none !important;
 }
+
+/* Minimal blog: hide the al-folio navbar entirely and reclaim its fixed-top space */
+#navbar {
+  display: none !important;
+}
+body.fixed-top-nav {
+  padding-top: 0;
+}
