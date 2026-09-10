@@ -233,7 +233,7 @@ body header div.first-menu-bar {
         }
     
         .background-image {
-            background-image: url("/assets/img/portfolio/1.png");
+            background-image: url("../img/portfolio/1.png");
             background-size: cover;
             display: flex;
             flex-direction: row;
@@ -599,7 +599,7 @@ body header div.first-menu-bar {
         }
     
         .background-image {
-            background-image: url("/assets/img/portfolio/1.png");
+            background-image: url("../img/portfolio/1.png");
             background-size: cover;
             display: flex;
             flex-direction: row;

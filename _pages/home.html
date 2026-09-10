@@ -9,7 +9,7 @@ nav: false
     <div class="first-menu-bar"><a class="link" href="#jobs">Experience</a></div>
     <div class="first-menu-bar"><a class="link" href="#projects">Project</a></div>
     <div class="first-menu-bar"><a class="link" href="#my-ins">Contact</a></div>
-    <div class="first-menu-bar"><a class="link" href="/blog/">Blog</a></div>
+    <div class="first-menu-bar"><a class="link" href="{{ '/blog/' | relative_url }}">Blog</a></div>
   </div>
 </header>
 <div id="content">
@@ -63,8 +63,8 @@ nav: false
           <li>Used <b>Optuna</b> to make <b>hyperparameter adjustments</b> to the project's existing code, which saved a large amount of time compared with the traditional <b>grid search</b> method.</li>
         </ul>
         <div class="sub-class4">
-          <div class="sub-class41"><img src="/assets/img/portfolio/hyperparameter.png" alt="problems of NAS" class="centered-image4" /><img src="/assets/img/portfolio/optuna.png" alt="Optuna" class="centered-image4" /></div>
-          <div class="sub-class41"><img src="/assets/img/portfolio/importance.png" alt="Important parameter" class="centered-image4" /><img src="/assets/img/portfolio/search.png" alt="Important parameter" class="centered-image4" /></div>
+          <div class="sub-class41"><img src="{{ '/assets/img/portfolio/hyperparameter.png' | relative_url }}" alt="problems of NAS" class="centered-image4" /><img src="{{ '/assets/img/portfolio/optuna.png' | relative_url }}" alt="Optuna" class="centered-image4" /></div>
+          <div class="sub-class41"><img src="{{ '/assets/img/portfolio/importance.png' | relative_url }}" alt="Important parameter" class="centered-image4" /><img src="{{ '/assets/img/portfolio/search.png' | relative_url }}" alt="Important parameter" class="centered-image4" /></div>
         </div></div></details>
       </nav>
     </div>
@@ -80,7 +80,7 @@ nav: false
             <li>Clients send request messages to the server, and servers reply with response messages layered on top of the <b>TCP</b> protocol.</li>
             <li>Implemented <b>HTTP persistent connection</b>: a client can reuse a TCP connection to a given server</li>
             <li>Provide <b>safe control</b> not allowing clients to access memory other than document root.</li>
-          </ul><img src="/assets/img/portfolio/httpPersistent.png" alt="client-server http protocol" class="centered-image" /></div>
+          </ul><img src="{{ '/assets/img/portfolio/httpPersistent.png' | relative_url }}" alt="client-server http protocol" class="centered-image" /></div>
         </li>
         <li>creating a <b>fault tolerant cloud-based file storage service</b> called SurfStore (client and server communicating using <b>gRPC</b>):
           <ul>
@@ -88,22 +88,22 @@ nav: false
             <div class="image-container2"><ul>
               <li>BlockStore: Stores these <b>blocks</b>, and when given an identifier, retrieves and returns the appropriate block.</li>
               <li>MetaStore: Manages the metadata of files and mapping of filenames to blocks (hash marshalled by <b>SHA-256</b>).</li>
-              <img src="/assets/img/portfolio/surfStore.png" alt="Basic idea of surfStore" class="centered-image2" />
+              <img src="{{ '/assets/img/portfolio/surfStore.png' | relative_url }}" alt="Basic idea of surfStore" class="centered-image2" />
             </ul></div>
             <div class="image-container2">
               <li>The clients' file data is stored in local database with <b>version</b>. When invoking into client, the sync operation will occur, and new files added to base directory will be uploaded to the cloud, files that were sync'd to the cloud from other clients will be downloaded to base directory, and any files which have ''edit conflicts'' will be resolved.</li>
-              <img src="/assets/img/portfolio/version.png" alt="SurfStore version control" class="centered-image2" />
+              <img src="{{ '/assets/img/portfolio/version.png' | relative_url }}" alt="SurfStore version control" class="centered-image2" />
             </div>
             <li>Store and manage the block in different BlockStore using <b>Consistent Hashing Ring</b>.</li>
             <div class="image-container3"><div class="sub-class3">
-              <img src="/assets/img/portfolio/ConsistentHashing.png" alt="Consistent Hashing Ring" class="centered-image3" />
-              <img src="/assets/img/portfolio/Akamai.png" alt="Akamai paper" class="centered-image3" />
+              <img src="{{ '/assets/img/portfolio/ConsistentHashing.png' | relative_url }}" alt="Consistent Hashing Ring" class="centered-image3" />
+              <img src="{{ '/assets/img/portfolio/Akamai.png' | relative_url }}" alt="Akamai paper" class="centered-image3" />
             </div></div>
             <div class="image-container3">
               <li>Ensure that the MetaStore is fault tolerant and stays consistent regardless of minority of server failures by <b>RAFT</b> protocol. (<a href="https://raft.github.io/raftscope/index.html">Raft Simulator</a>)</li>
               <div class="sub-class3">
-                <img src="/assets/img/portfolio/RAFT.png" alt="Raft protocol" class="centered-image3" />
-                <img src="/assets/img/portfolio/RAFT2.png" alt="Raft visulization" class="centered-image3" />
+                <img src="{{ '/assets/img/portfolio/RAFT.png' | relative_url }}" alt="Raft protocol" class="centered-image3" />
+                <img src="{{ '/assets/img/portfolio/RAFT2.png' | relative_url }}" alt="Raft visulization" class="centered-image3" />
               </div>
             </div>
           </ul>

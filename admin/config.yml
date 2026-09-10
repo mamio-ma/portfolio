@@ -7,15 +7,17 @@
 
 backend:
   name: github
-  repo: YOUR_GITHUB_USERNAME/YOUR_REPO   # e.g. mamio-ma/mamio-ma.github.io
+  repo: mamio-ma/portfolio
   branch: main
   # base_url points at the OAuth relay that authorizes the CMS with GitHub.
   # The default community relay works out of the box; you can self-host later.
   base_url: https://sveltia-cms-auth.services.sveltia.workers.dev
 
 # Where images uploaded from the editor are stored / referenced.
+# public_folder carries the /portfolio baseurl so images resolve on the
+# deployed project site (https://mamio-ma.github.io/portfolio/).
 media_folder: assets/img/uploads
-public_folder: /assets/img/uploads
+public_folder: /portfolio/assets/img/uploads
 
 collections:
   - name: posts
