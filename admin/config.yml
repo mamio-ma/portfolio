@@ -1,17 +1,18 @@
 # Sveltia CMS configuration (Decap-compatible)
 # Docs: https://github.com/sveltia/sveltia-cms
 #
-# TODO before this works:
-#   1. Replace REPO below with your GitHub "username/repository".
-#   2. Set up the one-time GitHub OAuth for Sveltia (see EDITING.md).
+# Sign in: use "Sign In Using Access Token" with a GitHub fine-grained
+# personal access token (see EDITING.md). "Sign In with GitHub" (OAuth) only
+# works after you deploy your own sveltia-cms-auth relay and set base_url.
 
 backend:
   name: github
   repo: mamio-ma/portfolio
   branch: main
-  # base_url points at the OAuth relay that authorizes the CMS with GitHub.
-  # The default community relay works out of the box; you can self-host later.
-  base_url: https://sveltia-cms-auth.services.sveltia.workers.dev
+  # Optional OAuth relay for the "Sign In with GitHub" button. There is no
+  # public relay; deploy https://github.com/sveltia/sveltia-cms-auth on
+  # Cloudflare Workers, then uncomment and set its URL:
+  # base_url: https://<your-worker>.workers.dev
 
 # Where images uploaded from the editor are stored / referenced.
 # public_folder carries the /portfolio baseurl so images resolve on the
