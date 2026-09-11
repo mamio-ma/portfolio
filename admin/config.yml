@@ -1,0 +1,44 @@
+# Sveltia CMS configuration (Decap-compatible)
+# Docs: https://github.com/sveltia/sveltia-cms
+#
+# TODO before this works:
+#   1. Replace REPO below with your GitHub "username/repository".
+#   2. Set up the one-time GitHub OAuth for Sveltia (see EDITING.md).
+
+backend:
+  name: github
+  repo: mamio-ma/portfolio
+  branch: main
+  # base_url points at the OAuth relay that authorizes the CMS with GitHub.
+  # The default community relay works out of the box; you can self-host later.
+  base_url: https://sveltia-cms-auth.services.sveltia.workers.dev
+
+# Where images uploaded from the editor are stored / referenced.
+# public_folder carries the /portfolio baseurl so images resolve on the
+# deployed project site (https://mamio-ma.github.io/portfolio/).
+media_folder: assets/img/uploads
+public_folder: /portfolio/assets/img/uploads
+
+collections:
+  - name: posts
+    label: Blog posts
+    label_singular: Blog post
+    folder: _posts
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    preview_path: "blog/{{year}}/{{slug}}/"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Layout, name: layout, widget: hidden, default: post }
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: datetime }
+      - { label: Description, name: description, widget: text, required: false }
+      - { label: Tags, name: tags, widget: list, required: false }
+      - label: "Table of contents"
+        name: toc
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { label: Sidebar, name: sidebar, widget: select, options: [left, right], default: left, required: false }
+      - { label: Body, name: body, widget: markdown }
