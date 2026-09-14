@@ -42,4 +42,12 @@ collections:
         collapsed: true
         fields:
           - { label: Sidebar, name: sidebar, widget: select, options: [left, right], default: left, required: false }
-      - { label: Body, name: body, widget: markdown }
+      - label: Body
+        name: body
+        widget: markdown
+        # Raw Markdown by default (Slack-style typing: `code`, ``` blocks); the
+        # toolbar still offers rich-text mode.
+        modes: [raw, rich_text]
+        hint: >-
+          Images: the Title becomes the caption under the image. Add "@60%" at
+          the end of the Title to show the image at 60% width (e.g. "My diagram @60%").

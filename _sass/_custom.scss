@@ -1,0 +1,84 @@
+/*******************************************************************************
+ * Site customizations (imported last, overrides the al-folio defaults)
+ *
+ * Blog posts follow the layout of Anthropic's engineering posts: a narrow
+ * reading column, images as full-width rounded cards with a caption below,
+ * and Slack-style inline code / code blocks.
+ ******************************************************************************/
+
+$post-column-width: 680px;
+$slack-code-text: #e01e5a;
+$slack-code-bg: rgba(29, 28, 29, 0.04);
+$slack-code-border: rgba(29, 28, 29, 0.13);
+
+// Narrow, centered reading column
+.post {
+  max-width: $post-column-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.post .post-content {
+  // Any image (including linked / inline ones) stays inside the column
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  // Figures produced by _plugins/post-figures.rb
+  figure.post-figure {
+    display: block;
+    width: 100%;
+    margin: 1.5rem auto;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      background-color: #fff;
+    }
+
+    figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.3;
+      text-align: left;
+      color: var(--global-text-color-light);
+    }
+  }
+
+  // Inline code, Slack style
+  :not(pre) > code {
+    color: $slack-code-text;
+    background-color: $slack-code-bg;
+    border: 1px solid $slack-code-border;
+    border-radius: 3px;
+    padding: 2px 3px 1px;
+    font-size: 0.875em;
+  }
+
+  // Code blocks: light panel with a hairline border
+  pre,
+  figure.highlight {
+    border: 1px solid $slack-code-border;
+    border-radius: 4px;
+  }
+
+  figure.highlight pre {
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+html[data-theme="dark"] .post .post-content {
+  :not(pre) > code {
+    background-color: var(--global-code-bg-color);
+    border-color: var(--global-divider-color);
+  }
+
+  pre,
+  figure.highlight {
+    border-color: var(--global-divider-color);
+  }
+}
