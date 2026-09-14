@@ -49,5 +49,6 @@ collections:
         # toolbar still offers rich-text mode.
         modes: [raw, rich_text]
         hint: >-
-          Images: the Title becomes the caption under the image. Add "@60%" at
-          the end of the Title to show the image at 60% width (e.g. "My diagram @60%").
+          Images: the Title becomes the caption under the image. A single image
+          fills the text width; upload several at once (kept on adjacent lines)
+          to show them side by side, sharing the width equally.

@@ -25,7 +25,8 @@ $slack-code-border: rgba(29, 28, 29, 0.13);
     height: auto;
   }
 
-  // Figures produced by _plugins/post-figures.rb
+  // Figures produced by _plugins/post-figures.rb.
+  // A lone image always spans the full text column; there is no per-image sizing.
   figure.post-figure {
     display: block;
     width: 100%;
@@ -45,6 +46,28 @@ $slack-code-border: rgba(29, 28, 29, 0.13);
       line-height: 1.3;
       text-align: left;
       color: var(--global-text-color-light);
+    }
+  }
+
+  // Several images uploaded into one paragraph share one row. They start as
+  // equal columns; assets/js/post-figures.js then sets each figure's flex-grow
+  // to its image's aspect ratio so all images in the row end up the same height
+  // (same-ratio images -> equal halves). On narrow screens they stack instead.
+  .post-figure-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 1.5rem 0;
+
+    figure.post-figure {
+      flex: 1 1 0;
+      min-width: 0;
+      margin: 0;
+    }
+
+    @media (max-width: 575.98px) {
+      flex-direction: column;
+      gap: 1.5rem;
     }
   }
 

@@ -70,6 +70,9 @@ layout: default
     </div>
   </article>
 
+  <!-- Equal-height rows for several images in one paragraph (see _plugins/post-figures.rb) -->
+  <script defer src="{{ '/assets/js/post-figures.js' | relative_url | bust_file_cache }}"></script>
+
   {% if page.citation %}
     {% include citation.liquid %}
   {% endif %}
