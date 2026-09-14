@@ -20,28 +20,6 @@ ninja.data = [{
             window.location.href = "/portfolio/blog/2026/from-loops-to-graphs-my-journey-building-ai-agents/";
           
         },
-      },{id: "post-math-and-code-rendering-demo",
-        
-          title: "Math and code rendering demo",
-        
-        description: "Verifying math typesetting, code highlighting, and the table of contents.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/portfolio/blog/2026/katex-and-code/";
-          
-        },
-      },{id: "post-welcome-to-my-blog",
-        
-          title: "Welcome to my blog",
-        
-        description: "First post — what this blog is for.",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/portfolio/blog/2026/welcome/";
-          
-        },
       },{
         id: 'social-cv',
         title: 'CV',
