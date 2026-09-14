@@ -102,8 +102,10 @@ lsi: false # produce an index for related posts
 pagination:
   enabled: true
 
+# Theme default is on; disabled so posts end without the
+# "Enjoy Reading This Article?" list of other posts.
 related_blog_posts:
-  enabled: true
+  enabled: false
   max_related: 5
 
 # Giscus comments (RECOMMENDED)
