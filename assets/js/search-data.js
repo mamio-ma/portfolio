@@ -9,7 +9,18 @@ ninja.data = [{
     handler: () => {
       window.location.href = "/portfolio/";
     },
-  },{id: "post-math-and-code-rendering-demo",
+  },{id: "post-from-loops-to-graphs-my-journey-building-ai-agents",
+        
+          title: "From Loops to Graphs: My Journey Building AI Agents",
+        
+        description: "How my agent architecture evolved from early prototypes to MCP, LangGraph, tool loops, skills, and graph-based orchestration",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/portfolio/blog/2026/from-loops-to-graphs-my-journey-building-ai-agents/";
+          
+        },
+      },{id: "post-math-and-code-rendering-demo",
         
           title: "Math and code rendering demo",
         
