@@ -13,7 +13,7 @@ ninja.data = [{
         
           title: "From Loops to Graphs: My Journey Building AI Agents",
         
-        description: "How my agent architecture evolved from early prototypes to MCP, LangGraph, tool loops, skills, and graph-based orchestration",
+        description: "How our agent architecture evolved from early prototypes to MCP, LangGraph, agent loops, skills, and graph-based orchestration",
         section: "Posts",
         handler: () => {
           
