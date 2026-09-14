@@ -19,7 +19,13 @@
       if (img.complete) {
         applyRatio(img);
       } else {
-        img.addEventListener("load", function () { applyRatio(img); }, { once: true });
+        img.addEventListener(
+          "load",
+          function () {
+            applyRatio(img);
+          },
+          { once: true }
+        );
       }
     });
   }
