@@ -45,9 +45,11 @@ collections:
       - label: Body
         name: body
         widget: markdown
-        # Raw Markdown by default (Slack-style typing: `code`, ``` blocks); the
-        # toolbar still offers rich-text mode.
-        modes: [raw, rich_text]
+        # Rich text by default so the toolbar buttons (bold, italic, code, image)
+        # are usable; Sveltia greys them out in raw mode. Markdown shortcuts
+        # (`code`, **bold**, ``` blocks) still work while typing, and the
+        # toolbar offers a switch to raw Markdown.
+        modes: [rich_text, raw]
         hint: >-
           Images: the Title becomes the caption under the image. A single image
           fills the text width; upload several at once (kept on adjacent lines)
