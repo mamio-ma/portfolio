@@ -31,3 +31,34 @@ However, after I did some exploration, I found a few problems:
 - We have so many tables (100+) and it becomes very difficult to help Genie differentiate between them.   
 
 The solution is simple, instead of vertically scale (which means we have only one single Genie that can answer all the questions), we choose to do horizontally scale (which means we break down into multiple Genie, with each Genie focus on one particular business area (e.g. contract, license, order, offer ..))
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Vertical Scale versus Horizontal Scale")
+
+After this change, the answer becomes much better, but it comes with a new problem, how to differentiate between these Genie?
+
+Inspired by Cursor that time, where you can host an [`mcp`](https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro) server, and cursor handles the orchestration. So I am thinking, can we also do the same thing on our end, basically wrapped our Genie api into tools and building an agent which do the  orchestration, and route to the tools.
+
+This is what our code looks like:
+
+```python
+from langgraph.graph import END, StateGraph
+workflow = StateGraph(AgentState)
+
+workflow.add_node("agent", RunnableLambda(call_model))
+workflow.add_node("tools", ToolNode(tools))
+
+workflow.set_entry_point("agent")
+workflow.add_conditional_edges(
+  "agent",
+  should_continue,
+  {
+     "continue": "tools",
+     "end": END,
+  },
+)
+workflow.add_edge("tools", "agent")
+
+return workflow.compile()
+```
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
