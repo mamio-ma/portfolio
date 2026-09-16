@@ -23,4 +23,11 @@ My second journey started in September 2025, the background is we have 100+ tabl
 
 At first we are simply want to adopt [Genie](https://docs.databricks.com/aws/en/genie/), for those who doesn't use Genie before, Genie is a DataBricks feature that allows business teams to interact with their data using natural language. You can simply create a Genie space and fill in the table and some instruction and examples sql query which helps Genie generate a better sql query. 
 
-![](/portfolio/assets/img/uploads/Screenshot%202026-09-14%20at%204.10.19%20PM.png "Genie Interface ")
+![](/portfolio/assets/img/uploads/Screenshot%202026-09-14%20at%204.10.19%20PM.png "Genie Interface")
+
+However, after I did some exploration, I found a few problems: 
+
+- we can provide some instructions to help Genie understand our business logic, but genie starts to hallucinate when prompt is too much.
+- We have so many tables (100+) and it becomes very difficult to help Genie differentiate between them.   
+
+The solution is simple, instead of vertically scale (which means we have only one single Genie that can answer all the questions), we choose to do horizontally scale (which means we break down into multiple Genie, with each Genie focus on one particular business area (e.g. contract, license, order, offer ..))
