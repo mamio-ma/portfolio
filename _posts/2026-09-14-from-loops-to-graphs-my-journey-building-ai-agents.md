@@ -62,3 +62,9 @@ return workflow.compile()
 ```
 
 ![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
+
+Afterwards, we also integrate with our slack channel so that our customer can simply ask question in slack:
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_18_59%20PM.png "example use case for answering question in slack")
+
+### Building agent with skill-based agent loop
