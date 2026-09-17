@@ -68,3 +68,8 @@ Afterwards, we also integrate with our slack channel so that our customer can si
 ![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_59_10%20PM.png "Example for answering question in slack")
 
 ### Building agent with skill-based agent loop
+
+Starting from early 2026, the term "skill" has become more and popular, we decided to migrate based on several reasons:
+
+- We want to enhance our agent to not just generating sql, but also triage oncall alerts, monitoring lag, create schedule and report. So we need a centralized place to manage our knowledge.
+- Inspired by Andrej Karpathy's [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), we build a silimar thing: llm will incrementally persist a wiki while engineer is  coding without additional effort. And this will act as the skill - or in another term `agent memory`
