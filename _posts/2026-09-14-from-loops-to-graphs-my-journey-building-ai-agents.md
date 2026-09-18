@@ -19,7 +19,7 @@ During that time, the model isn't very intelligent, therefore, in order to preve
 
 ### Build agent orchestration using Langgraph 
 
-My second journey started in September 2025, the background is we have 100+ tables stored in DataBricks Unity Catalog related to payment (contract, license, order, offer ... etc), and we want to build a chatbot for answering question for our customer. 
+My second journey started in October 2025, the background is we have 100+ tables stored in DataBricks Unity Catalog related to payment (contract, license, order, offer ... etc), and we want to build a chatbot for answering question for our customer. 
 
 At first we are simply want to adopt [Genie](https://docs.databricks.com/aws/en/genie/), for those who doesn't use Genie before, Genie is a DataBricks feature that allows business teams to interact with their data using natural language. You can simply create a Genie space and fill in the table and some instruction and examples sql query which helps Genie generate a better sql query. 
 
@@ -72,4 +72,8 @@ Afterwards, we also integrate with our slack channel so that our customer can si
 Starting from early 2026, the term "skill" has become more and popular, we decided to migrate based on several reasons:
 
 - We want to enhance our agent to not just generating sql, but also triage oncall alerts, monitoring lag, create schedule and report. So we need a centralized place to manage our knowledge.
-- Inspired by Andrej Karpathy's [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), we build a silimar thing: llm will incrementally persist a wiki while engineer is  coding without additional effort. And this will act as the skill - or in another term `agent memory`
+- Inspired by Andrej Karpathy's [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), we build a similar thing: llm will incrementally persist / update a wiki while engineer is  coding without additional effort. And this will act as the skill - or in another term `agent memory`
+
+Our architecture looks like:
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2017%2C%202026%2C%2004_59_38%20PM.png "Skill based agent loop architecture diagram")
