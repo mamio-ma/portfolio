@@ -80,7 +80,13 @@ Our architecture looks like:
 
 We made a few changes:
 
-- Our knowledges will be stored in skill, and the skill looks like:
+- Our knowledges will be stored in skill, and the skill.md looks like:
 ![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2006_13_33%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
-- We refactor all our mcp tools into cli, under script/, in filesystem format. We did it since Models are great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
+- We refactor all our mcp tools into cli, in filesystem format. We did it since Models are great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
 - We remove the agent framework such as langgraph, since they often create extra layers of abstraction.
+
+This is our code looks like:
+
+```python
+fdsfd
+```
