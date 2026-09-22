@@ -88,5 +88,45 @@ We made a few changes:
 This is our code looks like:
 
 ```python
-fdsfd
+async def agent_loop(messages, skill_registry, tool_registry, run_context) -> AsyncGenerator[dict]:
+      provider = get_llm_provider()
+      yield {"type": "start"}
+
+      # 1. ROUTE: one LLM call picks the skills
+      skills = route_to_skill(messages, skill_registry)
+      yield {"type": "message-metadata", "messageMetadata": {"skills": [s.name for s in skills]}}
+
+      # 2. INJECT: skill bodies become the system prompt, their tools the tool list
+      system_prompt = build_system_prompt(skills)
+      tools = tool_registry.to_openai_tools(merge_allowed_tools(skills))
+      conversation = provider.to_conversation(messages)
+
+      # 3. EXECUTE: model turn -> tools -> model turn ... until no tool calls
+      for _ in range(MAX_TOOL_ROUNDS):
+          turn = None
+          for event in provider.stream(system=system_prompt, conversation=conversation, tools=tools):
+              match event:
+                  case ReasoningDelta(text=t): yield {"type": "reasoning-delta", "delta": t}
+                  case TextDelta(text=t):      yield {"type": "text-delta", "delta": t}
+                  case TurnComplete():         turn = event
+          yield {"type": "message-metadata", "messageMetadata": {"usage": turn.usage}}
+
+          if not turn.tool_calls:
+              break                                               # final answer
+
+          conversation.append(turn.assistant_message)
+          results = []
+          for tc in turn.tool_calls:
+              yield {"type": "tool-input-available", "toolCallId": tc.id, "toolName": tc.name, "input": tc.args}
+              result = await run_in_executor(tool_registry.execute, tc.name, tc.args, run_context)
+              yield {"type": "tool-output-available", "toolCallId": tc.id, "output": result}
+              results.append((tc.id, result))
+          conversation.append(provider.tool_results_message(results))
+      else:
+     
+          yield {"type": "text-delta", "delta": MAX_ROUNDS_TEXT}
+
+      yield {"type": "finish", "finishReason": "stop"}
 ```
+
+dfd
