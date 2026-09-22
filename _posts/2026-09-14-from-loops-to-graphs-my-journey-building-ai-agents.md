@@ -129,4 +129,12 @@ async def agent_loop(messages, skill_registry, tool_registry, run_context) -> As
       yield {"type": "finish", "finishReason": "stop"}
 ```
 
-dfd
+### Shifting from loop to graph
+
+We decided to migrate our harness from loop to graph because we find that sometimes there is a dependency via tool selection, but don't want to hard-code everything in skill.md. 
+
+Let me explain more, for example, when we want to query a table, we want our agent to describe the table first, check the schema before actual query the table. Oncall is a more complex usecase, we want our agent to first lookup runbook, check cortex, pods to get more knowledge before doing more heavy lifting work such as querying splunk, replay the api call ... 
+
+So there are actual some dependency via tool, but we don't want to hard-code it in our skill. Because we want to give llm more freedom (llm is getting more and more intelligent), and hard-code everything means if anything changes, we have to update the skill, which is also time-consuming. 
+
+Therefore, we decided to migrate our agent harness from loop to graph, so instead of defining the `allowed_tools` in agent.md file, we will also provide the dependency in the skill:
