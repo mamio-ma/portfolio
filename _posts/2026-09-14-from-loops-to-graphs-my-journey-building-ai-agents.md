@@ -107,4 +107,6 @@ And we also setup some rules:
 
 Instead of hard-coding the sequence in skill, we only set the \`tool dependency\` in skill, in that way, llm can reuse the tool as long as it meet with our rules, run async in each layer (since each layer it doesn't have tool conflict).
 
-So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into our mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
+So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into my mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_39_01%20PM.png "Loop vs Graph - code comparison")
