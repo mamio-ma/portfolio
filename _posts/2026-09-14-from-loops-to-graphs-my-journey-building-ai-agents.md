@@ -97,7 +97,7 @@ So there are actual some dependency via tool, but we don't want to hard-code it 
 
 Therefore, we decided to migrate our agent harness from loop to graph, so instead of defining the `allowed_tools` in agent.md file, we will also provide the dependency in the skill:
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_02_06%20PM.png "skill with tool dependency")
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_43_53%20PM.png "skill with tool dependency")
 
 And we also setup some rules:
 
@@ -105,7 +105,7 @@ And we also setup some rules:
 - If all the predecessor has executed, the tool can be use. 
 - Every layer of the graph cannot have tool which have predecessor tool not processed yet. 
 
-Instead of hard-coding the sequence in skill, we only set the \`tool dependency\` in skill, in that way, llm can reuse the tool as long as it meet with our rules, run async in each layer (since each layer it doesn't have tool conflict).
+Instead of hard-coding the sequence in skill, we only set the `tool dependency` in skill, in that way, llm can reuse the tool as long as it meet with our rules, run async in each layer (since each layer it doesn't have tool conflict).
 
 So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into my mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
 
