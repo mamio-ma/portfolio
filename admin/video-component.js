@@ -1,6 +1,6 @@
 // Sveltia CMS editor component: insert a self-hosted video into a blog post.
 //
-// Loaded by admin/index.html (as a module script, after the Sveltia bundle).
+// Loaded by admin/index.html (plain script, right after the Sveltia bundle).
 // Writes plain HTML into the Markdown body so Jekyll passes it through
 // unchanged and the browser plays it directly; the pattern below recognises
 // that HTML again when a post is reopened so the block stays editable.
