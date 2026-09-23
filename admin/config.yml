@@ -19,6 +19,9 @@ backend:
 # deployed project site (https://mamio-ma.github.io/portfolio/).
 media_folder: assets/img/uploads
 public_folder: /portfolio/assets/img/uploads
+# Videos inserted with the toolbar "Video" button are stored separately in
+# assets/video/uploads (max 50 MB each); that is configured on the component
+# itself in admin/video-component.js, not here.
 
 collections:
   - name: posts

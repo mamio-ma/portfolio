@@ -10,5 +10,8 @@
     <!-- Sveltia CMS: a Decap-compatible, GitHub-friendly web editor.
          Reads config from ./config.yml -->
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+    <!-- Extra toolbar component: insert a video (see video-component.js).
+         Must also be a module script so it runs after the Sveltia bundle. -->
+    <script src="video-component.js" type="module"></script>
   </body>
 </html>
