@@ -38,7 +38,11 @@ After this change, the answer becomes much better, but it comes with a new probl
 
 Inspired by Cursor that time, where you can host an [`mcp`](https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro) server, and cursor handles the orchestration. So I am thinking, can we also do the same thing on our end, basically wrapped our Genie api into tools and building an agent which do the  orchestration, and route to the tools.
 
-This is what our code looks like:
+This is what our architecture looks like:
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
+
+Example code:
 
 ```python
 from langgraph.graph import END, StateGraph
@@ -61,8 +65,6 @@ workflow.add_edge("tools", "agent")
 return workflow.compile()
 ```
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
-
 Afterwards, we also integrate with our slack channel so that our customer can simply ask question in slack:
 
 ![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_59_10%20PM.png "Example for answering question in slack")
@@ -81,53 +83,9 @@ Our architecture looks like:
 We made a few changes:
 
 - Our knowledges will be stored in skill, and the skill.md looks like:
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2019%2C%202026%2C%2006_13_33%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
 - We refactor all our mcp tools into cli, in filesystem format. We did it since Models are great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
 - We remove the agent framework such as langgraph, since they often create extra layers of abstraction.
-
-This is our code looks like:
-
-```python
-async def agent_loop(messages, skill_registry, tool_registry, run_context) -> AsyncGenerator[dict]:
-      provider = get_llm_provider()
-      yield {"type": "start"}
-
-      # 1. ROUTE: one LLM call picks the skills
-      skills = route_to_skill(messages, skill_registry)
-      yield {"type": "message-metadata", "messageMetadata": {"skills": [s.name for s in skills]}}
-
-      # 2. INJECT: skill bodies become the system prompt, their tools the tool list
-      system_prompt = build_system_prompt(skills)
-      tools = tool_registry.to_openai_tools(merge_allowed_tools(skills))
-      conversation = provider.to_conversation(messages)
-
-      # 3. EXECUTE: model turn -> tools -> model turn ... until no tool calls
-      for _ in range(MAX_TOOL_ROUNDS):
-          turn = None
-          for event in provider.stream(system=system_prompt, conversation=conversation, tools=tools):
-              match event:
-                  case ReasoningDelta(text=t): yield {"type": "reasoning-delta", "delta": t}
-                  case TextDelta(text=t):      yield {"type": "text-delta", "delta": t}
-                  case TurnComplete():         turn = event
-          yield {"type": "message-metadata", "messageMetadata": {"usage": turn.usage}}
-
-          if not turn.tool_calls:
-              break                                               # final answer
-
-          conversation.append(turn.assistant_message)
-          results = []
-          for tc in turn.tool_calls:
-              yield {"type": "tool-input-available", "toolCallId": tc.id, "toolName": tc.name, "input": tc.args}
-              result = await run_in_executor(tool_registry.execute, tc.name, tc.args, run_context)
-              yield {"type": "tool-output-available", "toolCallId": tc.id, "output": result}
-              results.append((tc.id, result))
-          conversation.append(provider.tool_results_message(results))
-      else:
-     
-          yield {"type": "text-delta", "delta": MAX_ROUNDS_TEXT}
-
-      yield {"type": "finish", "finishReason": "stop"}
-```
 
 ### Shifting from loop to graph
 
@@ -138,3 +96,15 @@ Let me explain more, for example, when we want to query a table, we want our age
 So there are actual some dependency via tool, but we don't want to hard-code it in our skill. Because we want to give llm more freedom (llm is getting more and more intelligent), and hard-code everything means if anything changes, we have to update the skill, which is also time-consuming. 
 
 Therefore, we decided to migrate our agent harness from loop to graph, so instead of defining the `allowed_tools` in agent.md file, we will also provide the dependency in the skill:
+
+![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_02_06%20PM.png "skill with tool dependency")
+
+And we also setup some rules:
+
+- If tool A depends on tool B, then tool B will have to be execute first. 
+- If all the predecessor has executed, the tool can be use. 
+- Every layer of the graph cannot have tool which have predecessor tool not processed yet. 
+
+Instead of hard-coding the sequence in skill, we only set the \`tool dependency\` in skill, in that way, llm can reuse the tool as long as it meet with our rules, run async in each layer (since each layer it doesn't have tool conflict).
+
+So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into our mind: Topological sort. We will use Kahn's topological sort algorithm, where a tool will be released for llm where all the predecessor has been used.
