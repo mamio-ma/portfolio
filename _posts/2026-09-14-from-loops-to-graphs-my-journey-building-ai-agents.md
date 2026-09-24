@@ -72,7 +72,7 @@ return workflow.compile()
 
 We later integrated the agent with Slack, allowing users to ask data questions directly from their existing workflow.
 
-### Stage 3 — Building an Agent with a Skill-Based Agent Loop
+### Building an Agent with a Skill-Based Agent Loop
 
 By early 2026, the idea of packaging reusable knowledge and capabilities into `skills` was becoming increasingly common in agent systems. As our use cases expanded, we decided to evolve the architecture again.
 
@@ -94,27 +94,54 @@ We made a few changes:
 - We refactored our MCP-based tools into CLI-backed capabilities organized through the filesystem. We did it since LLM is great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
 - We remove LangGraph from the agent runtime. since they often create extra layers of abstraction.
 
-### Shifting from loop to graph
+### From a Flat Agent Loop to a Dependency-Aware Graph
 
-We decided to migrate our harness from loop to graph because we find that sometimes there is a dependency via tool selection, but don't want to hard-code everything in skill.md. 
+As our skills became more complex, we started seeing another limitation of the flat agent loop: **not every tool should be available at every point in the investigation**. Some tools naturally depend on information produced by others.
 
-Let me explain more, for example, when we want to query a table, we want our agent to describe the table first, check the schema before actual query the table. Oncall is a more complex usecase, we want our agent to first lookup runbook, check cortex, pods to get more knowledge before doing more heavy lifting work such as querying splunk, replay the api call ... 
+Let me explain more. For example, when querying an unfamiliar table, we usually want the agent to inspect the table description and schema before issuing the actual query. On-call investigation is even more dependency-heavy: we may want the agent to consult the runbook and inspect lightweight signals such as Cortex metrics or pod status before moving on to more expensive or invasive actions such as searching Splunk or replaying an API request.
 
-So there are actual dependencies via tool, but we don't want to hard-code it in our skill. Because we want to give llm more freedom (llm is getting more and more intelligent), and hard-code everything means if anything changes, we have to update the skill, which is also time-consuming. 
+We could encode these procedures directly as step-by-step instructions in `SKILL.md`, but that would make the execution path unnecessarily rigid.
 
-Therefore, we decided to migrate our agent harness from loop to graph, so instead of defining the `allowed_tools` in agent.md file, we will also provide the dependency in the skill:
+What we actually cared about was not the exact sequence of operations, but the **constraints between them**.
+
+For example:
+
+```plain
+lookup_runbook
+├── query_cortex
+├── search_splunk
+└── check_pods
+
+search_splunk
+└── call_upstream_api
+```
+
+The model should still be free to decide whether it needs `query_cortex`, `search_splunk`, `check_pods`, or some combination of them. We only need to guarantee that a tool is not made available until its prerequisites have completed.
+
+So instead of hard-coding an execution sequence, we added declarative **tool dependencies** to the skill definition:
 
 ![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_43_53%20PM.png "skill with tool dependency")
 
-And we also setup some rules:
+This gave us a few simple execution rules:
 
-- If tool A depends on tool B, then tool B will have to be execute first. 
-- If all the predecessor has executed, the tool can be use. 
-- Every layer of the graph cannot have tool which have predecessor tool not processed yet. 
+- A tool becomes eligible only after all of its prerequisite tools have completed successfully.
+- Tools whose prerequisites are already satisfied can be exposed to the model as the current **eligible frontier**.
+- Tools in the same frontier have no dependency relationship with one another, so independent calls can be executed concurrently when it is safe to do so.
+- Dependency definitions must remain acyclic; otherwise the graph contains no valid execution order.
 
-Instead of hard-coding the sequence in skill, we only set the `tool dependency` in skill, in that way, llm can reuse the tool as long as it meet with our rules, since each layer it doesn't have tool dependency, each layer can run tool asynchronously.
+This turns the tool constraints into a `directed acyclic graph (DAG)`, where nodes represent tool capabilities and directed edges represent prerequisite relationships.
 
-So this will translate into a DAG, where each node represents a tool, and each edge represents the dependency of the tool. Then a very popular algorithm came into my mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
+The agent loop still decides **what to do next**, but the graph determines **what it is currently allowed to do**.
+
+To maintain this eligible frontier efficiently, we use the same indegree-based idea behind `Kahn's Topological Sort`. Tools with an indegree of zero are initially eligible. When a prerequisite completes, we decrement the indegree of its dependents. Once a tool's remaining indegree reaches zero, it becomes available to the model.
+
+This gave us a useful separation of responsibilities:
+
+**The skill defines the constraints.**
+**The graph manages eligibility.**
+**The LLM chooses the path.**
+
+The code looks like:
 
 ![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_39_01%20PM.png "Loop vs Graph - code comparison")
 
