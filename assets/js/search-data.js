@@ -13,7 +13,7 @@ ninja.data = [{
         
           title: "From Prompt Chains to Agent Graphs: How Our Agent Architecture Evolved",
         
-        description: "Over the past two years, our agent architecture evolved through four stages: deterministic prompt chains, LangGraph-based orchestration, a lightweight skill-based agent loop, and finally agent graph.This post walks through that evolution and explains why we eventually chose to use graph to represent our agent orchestration.",
+        description: "Over the past two years, our agent architecture evolved through four stages: deterministic prompt chains, LangGraph-based orchestration, a lightweight skill-based agent loop, and finally agent graph.This post walks through that evolution and explains why we eventually chose to use a graph to represent our agent orchestration.",
         section: "Posts",
         handler: () => {
           
