@@ -149,3 +149,14 @@ The code looks like:
   <video controls preload="metadata" src="/assets/img/uploads/Untitled%20-%20September%2023%2C%202026%20at%2015.31.16%20%28720p%29.mp4"></video>
   <figcaption>This video visualize the agent graph when I ask our agent to traige an alert</figcaption>
 </figure>
+
+### What I Learned from This Evolution
+
+- **Harnesses may become lighter as models get stronger.**
+Much of the progress in agent capabilities comes from improvements in the underlying models—their ability to reason across multiple turns, use tools, recover from errors, and operate over longer horizons. A harness does not create that intelligence; its role is to expose and organize those capabilities for a particular application. As models improve, some mechanisms that were once necessary may eventually become unnecessary.
+- **The newest harness is not necessarily the best harness.**
+Different environments require different designs: a coding agent, a research agent, and a conversational agent may need very different control structures. Even within the same domain, a newer or more sophisticated architecture is not automatically better. What matters more is evaluation: does the new design actually improve task success, reliability, latency, or cost? Evals—and ideally held-out evals and regression suites—should guide architecture decisions rather than architectural novelty itself.
+- **So, does it still make sense to talk about harnesses? I think it does.**
+Research directions such as recursive self-improvement (RSI) and test-time-training (TTT) adaptation point toward agents that can increasingly improve their own behavior. But we are still far from production agents that can reliably redesign their own operating environment end to end. In the near term, I expect harnesses to become more lightweight and less prescriptive, but not disappear. They will continue to encode things the model cannot simply infer: business constraints, security boundaries, tool interfaces, durable state, and application-specific guarantees.
+- **For me, this is what makes agent engineering so interesting.**
+It feels a bit like building with Lego while new pieces are constantly being added to the box. While you are figuring out how to assemble the pieces you already have, new models, tools, protocols, and abstractions keep expanding what you can build. Some designs become obsolete quickly; others suddenly become possible. There is a strange feeling of being pushed forward by the pace of the field—but that is also what makes the journey exciting.
