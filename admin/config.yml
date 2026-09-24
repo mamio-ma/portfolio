@@ -19,9 +19,19 @@ backend:
 # deployed project site (https://mamio-ma.github.io/portfolio/).
 media_folder: assets/img/uploads
 public_folder: /portfolio/assets/img/uploads
-# Videos inserted with the toolbar "Video" button are stored separately in
-# assets/video/uploads (max 50 MB each); that is configured on the component
-# itself in admin/video-component.js, not here.
+# Videos inserted with the toolbar "Video" button (admin/video-component.js)
+# are stored here too: Sveltia ignores per-field folders inside editor
+# components, so there is one upload folder for images and videos.
+
+# Upload size cap, all files. GitHub's GraphQL API refuses request payloads
+# over 45 MB and Sveltia base64-encodes the file (x1.37) into that payload,
+# so anything over ~32 MB fails with "The request payload cannot be larger
+# than 45MB" at save time. 30 MB keeps a margin and gives a clear error at
+# upload time instead.
+media_libraries:
+  default:
+    config:
+      max_file_size: 31457280 # 30 MB
 
 collections:
   - name: posts
