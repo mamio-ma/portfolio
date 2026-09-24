@@ -5,47 +5,49 @@ date: 2026-09-13T22:45:00
 description: |-
   Over the past two years, our agent architecture evolved through four stages: deterministic prompt chains, LangGraph-based orchestration, a lightweight skill-based agent loop, and finally agent graph.
 
-  This post walks through that evolution and explains why we eventually chose to use graph to represent our agent orchestration.
+  This post walks through that evolution and explains why we eventually chose to use a graph to represent our agent orchestration.
 tags: []
 toc: null
 ---
 
 ### Stage 1 - Build chatbot using prompt chaining workflow
 
-The first iteration began in early 2025 because during that time we repeatedly had to diagnose batch-ingestion failures, where we need to diagnose batch ingestion failure. So I was thinking maybe we can build a chatbot (that time the term "agent" was not yet as widely used) and help reduce the human effort. 
+The first iteration began in early 2025, when we frequently had to diagnose batch-ingestion failures. Much of the troubleshooting process was repetitive, so I started wondering whether we could build a chatbot to automate parts of the diagnosis and reduce the amount of manual effort involved.
 
-So I built a `prompt chaining` workflow using [CrewAI](https://crewai.com/) and picked Llama 3 served by Ollama:
+At the time, we still thought of the system primarily as a chatbot rather than an agent.
+
+I built a `prompt-chaining` workflow using [CrewAI](https://crewai.com/) and selected Llama 3, served locally through Ollama:
 
 ![](/assets/img/uploads/Screenshot%202026-09-13%20at%2011.01.39%20PM.png "Example prompt chaining workflow")
 
-During that time, the model isn't very intelligent, therefore, in order to reduce hallucination, we have to make the workflow deterministic. 
+Compared with today's models, the models available to us at the time were less reliable at multi-step reasoning and following complex instructions. To make the system more predictable and reduce the risk of hallucinations, we kept the workflow largely deterministic: each step had a predefined responsibility, and the execution path was explicitly orchestrated rather than decided dynamically by the model.
 
 ### Stage 2 — LangGraph-Based Tool Orchestration
 
-My second journey started in October 2025, the background is we have 100+ tables stored in DataBricks Unity Catalog related to payment (contract, license, order, offer ... etc), and we want to build a chatbot for answering question for our customer. 
+The second iteration began in October 2025. At the time, we had more than 100 tables in Databricks Unity Catalog spanning different commerce domains, such as contracts, licenses, orders, and offers. We wanted to build a chatbot that could answer users' questions across these datasets.
 
-Initially, we wanted to adopt [Genie](https://docs.databricks.com/aws/en/genie/), for those who doesn't use Genie before, Genie is a DataBricks feature that allows business teams to interact with their data using natural language. You can simply create a Genie space and fill in the table and some instruction and example SQL queries which helps Genie generate a better sql query. 
+Initially, we considered adopting [Databricks Genie](https://docs.databricks.com/aws/en/genie/). For those unfamiliar with Genie, it provides a natural-language interface for querying data in Databricks. You can create a Genie space, add relevant tables, and provide business context through instructions and example SQL queries to improve the accuracy of the generated queries.
 
 ![](/assets/img/uploads/Screenshot%202026-09-14%20at%204.10.19%20PM.png "Genie Interface")
 
-However, after I did some exploration, I found a few problems: 
+However, after some experimentation, I found two challenges:
 
-- we can provide some instructions to help Genie understand our business logic, but genie starts to hallucinate as the semantic scope and instruction set became more heterogeneous.
-- We have so many tables (100+) and it becomes very difficult to help Genie differentiate between them.   
+- As the semantic scope expanded across increasingly heterogeneous business domains, it became harder for a single Genie space to consistently apply the right business context. Adding more instructions did not necessarily solve the problem and sometimes made query generation less reliable.
+- With more than 100 tables across different domains, selecting the correct tables and distinguishing between similar concepts became increasingly difficult.
 
-The solution is simple, Rather than putting heterogeneous business domains behind a single generalist Genie space, we partitioned the system into domain-specialized spaces.
+Rather than putting heterogeneous business domains behind a single generalist Genie space, we partitioned the system into multiple domain-specialized spaces, with each one responsible for a narrower business area.
 
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Vertical Scale versus Horizontal Scale")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Single generalist vs. domain-specialized Genie spaces")
 
-In our internal testing, domain specialization reduced table-selection errors, but introduced a new problem: how to route each request to the appropriate Genie space.
+In our internal testing, this domain specialization reduced table-selection errors, but it introduced a new problem: **how should we route each request to the appropriate Genie space?**
 
-Inspired by Cursor that time, where you can host an [`mcp`](https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro) server, and cursor handles the orchestration. So I am thinking, can we also do the same thing on our end, basically wrapped our Genie api into tools and building an agent which do the  orchestration, and route to the tools.
+At the time, I was inspired by the way Cursor integrated with MCP servers: external systems could expose capabilities as tools, and Cursor's agent could decide when to invoke them. That led me to a similar design idea: what if we wrapped each domain-specific Genie API as a tool and placed an LLM-based orchestrator in front of them?
 
-This is what our architecture looks like:
+This is what the architecture looked like:
 
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "LLM orchestrator with domain-specialized Genie tools")
 
-Example code:
+We implemented this orchestration layer with LangGraph. At its core, the graph formed a simple model–tool loop: the model decided whether a tool call was needed, LangGraph executed the selected tool, and the result was fed back to the model for the next step.
 
 ```python
 from langgraph.graph import END, StateGraph
@@ -68,9 +70,7 @@ workflow.add_edge("tools", "agent")
 return workflow.compile()
 ```
 
-Afterwards, we also integrate with our slack channel so that our customer can simply ask question in slack:
-
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_59_10%20PM.png "Example for answering question in slack")
+We later integrated the agent with Slack, allowing users to ask data questions directly from their existing workflow.
 
 ### Building agent with skill-based agent loop
 
