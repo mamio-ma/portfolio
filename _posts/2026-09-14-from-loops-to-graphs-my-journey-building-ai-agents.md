@@ -110,3 +110,7 @@ Instead of hard-coding the sequence in skill, we only set the `tool dependency` 
 So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into my mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
 
 ![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_39_01%20PM.png "Loop vs Graph - code comparison")
+
+<figure class="video">
+  <video controls preload="metadata" src="/portfolio/assets/img/uploads/Untitled%20-%20September%2023%2C%202026%20at%2015.31.16%20%28720p%29.mp4"></video>
+</figure>
