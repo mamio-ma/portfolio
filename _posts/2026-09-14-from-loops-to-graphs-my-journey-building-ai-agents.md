@@ -113,4 +113,5 @@ So this will translate into a DAG, where each node represent a tool, and edge re
 
 <figure class="video">
   <video controls preload="metadata" src="/portfolio/assets/img/uploads/Untitled%20-%20September%2023%2C%202026%20at%2015.31.16%20%28720p%29.mp4"></video>
+  <figcaption>This video visualize the agent graph when I ask our agent to traige an alert</figcaption>
 </figure>
