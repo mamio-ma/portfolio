@@ -7,7 +7,7 @@ ninja.data = [{
     title: "Mingyong Ma",
     section: "Navigation",
     handler: () => {
-      window.location.href = "/portfolio/";
+      window.location.href = "/";
     },
   },{id: "post-from-loops-to-graphs-my-journey-building-ai-agents",
         
@@ -17,7 +17,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/portfolio/blog/2026/from-loops-to-graphs-my-journey-building-ai-agents/";
+            window.location.href = "/blog/2026/from-loops-to-graphs-my-journey-building-ai-agents/";
           
         },
       },{
@@ -25,7 +25,7 @@ ninja.data = [{
         title: 'CV',
         section: 'Socials',
         handler: () => {
-          window.open("/portfolio/assets/pdf/example_pdf.pdf", "_blank");
+          window.open("/assets/pdf/example_pdf.pdf", "_blank");
         },
       },{
         id: 'social-email',
@@ -53,7 +53,7 @@ ninja.data = [{
         title: 'RSS Feed',
         section: 'Socials',
         handler: () => {
-          window.open("/portfolio/feed.xml", "_blank");
+          window.open("/feed.xml", "_blank");
         },
       },{
       id: 'light-theme',

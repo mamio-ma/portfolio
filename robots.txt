@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://mamio-ma.github.io/portfolio/sitemap.xml
+Sitemap: https://mingyongma-agent-design.pages.dev/sitemap.xml
