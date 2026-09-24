@@ -37,7 +37,7 @@ However, after some experimentation, I found two challenges:
 
 Rather than putting heterogeneous business domains behind a single generalist Genie space, we partitioned the system into multiple domain-specialized spaces, with each one responsible for a narrower business area.
 
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Single generalist vs. domain-specialized Genie spaces")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2024%2C%202026%2C%2004_15_54%20PM.png "Single generalist vs. domain-specialized Genie spaces")
 
 In our internal testing, this domain specialization reduced table-selection errors, but it introduced a new problem: **how should we route each request to the appropriate Genie space?**
 
@@ -72,12 +72,16 @@ return workflow.compile()
 
 We later integrated the agent with Slack, allowing users to ask data questions directly from their existing workflow.
 
-### Building agent with skill-based agent loop
+### Stage 3 — Building an Agent with a Skill-Based Agent Loop
 
-Starting from early 2026, the term "skill" has become increasing common, we decided to migrate based on several reasons:
+By early 2026, the idea of packaging reusable knowledge and capabilities into `skills` was becoming increasingly common in agent systems. As our use cases expanded, we decided to evolve the architecture again.
 
-- We want to enhance our agent to not just generating sql, but also triage on-call alerts, monitoring lag, create schedule and report. So we need a centralized place to manage our knowledge.
-- Inspired by Andrej Karpathy's [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), we build a similar thing: llm will incrementally persist / update a wiki while engineer is  coding without additional effort. And this will act as the skill - for our agent to use. Therefore our architecture need to reflect these changes.
+There were two main motivations:
+
+- We wanted the agent to do more than generate SQL. It now needed to triage on-call alerts, investigate pipeline lag, create reporting schedules, generate reports, and support other operational workflows. As the scope grew, we needed a structured and version-controlled way to organize domain knowledge, procedures, and tools.
+- We also wanted that knowledge to improve continuously as engineers worked. Rather than repeatedly encoding the same context into prompts, we started maintaining persistent Markdown-based knowledge that the agent could update over time and later reuse as part of its skills.
+
+Andrej Karpathy’s [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) later reinforced this idea: instead of rebuilding context from scratch for every request, an LLM can incrementally maintain a persistent knowledge base that becomes richer over time.
 
 Our architecture looks like:
 
@@ -86,9 +90,9 @@ Our architecture looks like:
 We made a few changes:
 
 - Our knowledge will be stored in skill, and the skill.md looks like:
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
-- We refactor all our mcp tools into cli, in filesystem format. We did it since Models are great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
-- We remove the agent framework such as LangGraph, since they often create extra layers of abstraction.
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Each `SKILL.md` defined the instructions, domain knowledge, and tools available for a particular class of tasks.
+- We refactored our MCP-based tools into CLI-backed capabilities organized through the filesystem. We did it since LLM is great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
+- We remove LangGraph from the agent runtime. since they often create extra layers of abstraction.
 
 ### Shifting from loop to graph
 
