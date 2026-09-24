@@ -90,7 +90,7 @@ Our architecture looks like:
 We made a few changes:
 
 - Our knowledge will be stored in skill, and the skill.md looks like:
-![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Each `SKILL.md` defined the instructions, domain knowledge, and tools available for a particular class of tasks.
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2024%2C%202026%2C%2004_28_50%20PM.png "Example skill format")Each `SKILL.md` defined the instructions, domain knowledge, and tools available for a particular class of tasks.
 - We refactored our MCP-based tools into CLI-backed capabilities organized through the filesystem. We did it since LLM is great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
 - We remove LangGraph from the agent runtime. since they often create extra layers of abstraction.
 
