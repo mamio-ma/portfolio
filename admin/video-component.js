@@ -5,8 +5,14 @@
 // unchanged and the browser plays it directly; the pattern below recognises
 // that HTML again when a post is reopened so the block stays editable.
 // Styling: _sass/_custom.scss (figure.video). User docs: EDITING.md.
+//
+// Storage and size limit are NOT configured here: Sveltia ignores per-field
+// media_folder / media_libraries inside editor components (verified 2026-09-23),
+// so uploads land in the global media_folder (assets/img/uploads) and the
+// 30 MB cap lives in admin/config.yml. 30 MB is the practical ceiling because
+// GitHub's GraphQL API refuses request payloads over 45 MB and the file is
+// base64-encoded (x1.37) into that payload.
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // GitHub rejects blobs over 100 MB; stay well under
 const AUTOPLAY_ATTRS = 'autoplay muted loop playsinline'; // browsers only autoplay muted video
 
 const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
@@ -33,12 +39,9 @@ const videoComponent = {
   fields: [
     {
       name: 'src',
-      label: 'Video file (mp4 or webm, up to 50 MB)',
+      label: 'Video file (mp4 or webm, up to 30 MB)',
       widget: 'file',
       accept: 'video/mp4,video/webm',
-      media_folder: 'assets/video/uploads',
-      public_folder: '/portfolio/assets/video/uploads',
-      media_libraries: { default: { config: { max_file_size: MAX_FILE_SIZE } } },
     },
     { name: 'caption', label: 'Caption', widget: 'string', required: false },
     {
