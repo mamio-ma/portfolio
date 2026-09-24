@@ -13,7 +13,7 @@ My first journey started in early 2025 because during that time we have a bunch 
 
 So I build a `prompt chaining` workflow using [CrewAI](https://crewai.com/) and picked LLama 3 served by OLLaMa:
 
-![](/portfolio/assets/img/uploads/Screenshot%202026-09-13%20at%2011.01.39%20PM.png "Example prompt chaining workflow")
+![](/assets/img/uploads/Screenshot%202026-09-13%20at%2011.01.39%20PM.png "Example prompt chaining workflow")
 
 During that time, the model isn't very intelligent, therefore, in order to prevent hallucination, we have to make the workflow deterministic. So therefore, it is not very usefully for handling some very generic or vague use cases.
 
@@ -23,7 +23,7 @@ My second journey started in October 2025, the background is we have 100+ tables
 
 At first we are simply want to adopt [Genie](https://docs.databricks.com/aws/en/genie/), for those who doesn't use Genie before, Genie is a DataBricks feature that allows business teams to interact with their data using natural language. You can simply create a Genie space and fill in the table and some instruction and examples sql query which helps Genie generate a better sql query. 
 
-![](/portfolio/assets/img/uploads/Screenshot%202026-09-14%20at%204.10.19%20PM.png "Genie Interface")
+![](/assets/img/uploads/Screenshot%202026-09-14%20at%204.10.19%20PM.png "Genie Interface")
 
 However, after I did some exploration, I found a few problems: 
 
@@ -32,7 +32,7 @@ However, after I did some exploration, I found a few problems:
 
 The solution is simple, instead of vertically scale (which means we have only one single Genie that can answer all the questions), we choose to do horizontally scale (which means we break down into multiple Genie, with each Genie focus on one particular business area (e.g. contract, license, order, offer ..))
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Vertical Scale versus Horizontal Scale")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2003_36_34%20PM.png "Vertical Scale versus Horizontal Scale")
 
 After this change, the answer becomes much better, but it comes with a new problem, how to differentiate between these Genie?
 
@@ -40,7 +40,7 @@ Inspired by Cursor that time, where you can host an [`mcp`](https://modelcontext
 
 This is what our architecture looks like:
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_02_49%20PM.png "Orchestrator - Worker pattern")
 
 Example code:
 
@@ -67,7 +67,7 @@ return workflow.compile()
 
 Afterwards, we also integrate with our slack channel so that our customer can simply ask question in slack:
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_59_10%20PM.png "Example for answering question in slack")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2016%2C%202026%2C%2004_59_10%20PM.png "Example for answering question in slack")
 
 ### Building agent with skill-based agent loop
 
@@ -78,12 +78,12 @@ Starting from early 2026, the term "skill" has become more and popular, we decid
 
 Our architecture looks like:
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2017%2C%202026%2C%2004_59_38%20PM.png "Skill based agent loop architecture diagram")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2017%2C%202026%2C%2004_59_38%20PM.png "Skill based agent loop architecture diagram")
 
 We made a few changes:
 
 - Our knowledges will be stored in skill, and the skill.md looks like:
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2006_58_16%20PM.png "Example skill format")Our smallest granularity is skill, which defines the boundary for the llm. In the agent loop, LLM will only orchestrate with the tool listed in the skill. 
 - We refactor all our mcp tools into cli, in filesystem format. We did it since Models are great at navigating filesystems. Presenting tools as code on a filesystem allows models to read tool definitions on-demand, rather than reading them all up-front. 
 - We remove the agent framework such as langgraph, since they often create extra layers of abstraction.
 
@@ -97,7 +97,7 @@ So there are actual some dependency via tool, but we don't want to hard-code it 
 
 Therefore, we decided to migrate our agent harness from loop to graph, so instead of defining the `allowed_tools` in agent.md file, we will also provide the dependency in the skill:
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_43_53%20PM.png "skill with tool dependency")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_43_53%20PM.png "skill with tool dependency")
 
 And we also setup some rules:
 
@@ -109,9 +109,9 @@ Instead of hard-coding the sequence in skill, we only set the `tool dependency` 
 
 So this will translate into a DAG, where each node represent a tool, and edge represent the dependency of the tool. Then a very popular algorithm came into my mind: Topological sort. We will use `Kahn's topological sort` algorithm, where a tool will be released for llm where all the predecessor has been used.
 
-![](/portfolio/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_39_01%20PM.png "Loop vs Graph - code comparison")
+![](/assets/img/uploads/ChatGPT%20Image%20Sep%2022%2C%202026%2C%2007_39_01%20PM.png "Loop vs Graph - code comparison")
 
 <figure class="video">
-  <video controls preload="metadata" src="/portfolio/assets/img/uploads/Untitled%20-%20September%2023%2C%202026%20at%2015.31.16%20%28720p%29.mp4"></video>
+  <video controls preload="metadata" src="/assets/img/uploads/Untitled%20-%20September%2023%2C%202026%20at%2015.31.16%20%28720p%29.mp4"></video>
   <figcaption>This video visualize the agent graph when I ask our agent to traige an alert</figcaption>
 </figure>

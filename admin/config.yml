@@ -15,10 +15,9 @@ backend:
   # base_url: https://<your-worker>.workers.dev
 
 # Where images uploaded from the editor are stored / referenced.
-# public_folder carries the /portfolio baseurl so images resolve on the
-# deployed project site (https://mamio-ma.github.io/portfolio/).
+# The site is served at the domain root, so public paths start at /assets.
 media_folder: assets/img/uploads
-public_folder: /portfolio/assets/img/uploads
+public_folder: /assets/img/uploads
 # Videos inserted with the toolbar "Video" button (admin/video-component.js)
 # are stored here too: Sveltia ignores per-field folders inside editor
 # components, so there is one upload folder for images and videos.
