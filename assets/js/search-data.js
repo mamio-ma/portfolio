@@ -9,11 +9,11 @@ ninja.data = [{
     handler: () => {
       window.location.href = "/";
     },
-  },{id: "post-from-loops-to-graphs-my-journey-building-ai-agents",
+  },{id: "post-from-prompt-chains-to-agent-graphs-how-our-agent-architecture-evolved",
         
-          title: "From Loops to Graphs: My Journey Building AI Agents",
+          title: "From Prompt Chains to Agent Graphs: How Our Agent Architecture Evolved",
         
-        description: "How our agent architecture evolved from early prototypes to MCP, LangGraph, agent loops, skills, and graph-based orchestration",
+        description: "Over the past two years, our agent architecture evolved through four stages: deterministic prompt chains, LangGraph-based orchestration, a lightweight skill-based agent loop, and finally agent graph.This post walks through that evolution and explains why we eventually chose to use graph to represent our agent orchestration.",
         section: "Posts",
         handler: () => {
           
