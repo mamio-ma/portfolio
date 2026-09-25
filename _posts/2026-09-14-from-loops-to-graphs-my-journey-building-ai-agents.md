@@ -20,7 +20,7 @@ I built a `prompt-chaining` workflow using [CrewAI](https://crewai.com/) and sel
 
 ![](/assets/img/uploads/Screenshot%202026-09-13%20at%2011.01.39%20PM.png "Example prompt chaining workflow")
 
-Compared with today's models, the models available to us at the time were less reliable at multi-step reasoning and following complex instructions. To make the system more predictable and reduce the risk of hallucinations, we kept the workflow largely deterministic: each step had a predefined responsibility, and the execution path was explicitly orchestrated rather than decided dynamically by the model.
+Compared with today's models, the models available to us at the time were less reliable at multi-turn reasoning and following complex instructions. To make the system more predictable and reduce the risk of hallucinations, we kept the workflow largely deterministic: each step had a predefined responsibility, and the execution path was explicitly orchestrated rather than decided dynamically by the model.
 
 ### Stage 2 — LangGraph-Based Tool Orchestration
 
@@ -152,7 +152,7 @@ The code looks like:
 
 ### What I Learned from This Evolution
 
-- **Harnesses may become lighter as models get stronger.**
+- **Harnesses may diminish as models get stronger.**
 Much of the progress in agent capabilities comes from improvements in the underlying models—their ability to reason across multiple turns, use tools, recover from errors, and operate over longer horizons. A harness does not create that intelligence; its role is to expose and organize those capabilities for a particular application. As models improve, some mechanisms that were once necessary may eventually become unnecessary.
 - **The newest harness is not necessarily the best harness.**
 Different environments require different designs: a coding agent, a research agent, and a conversational agent may need very different control structures. Even within the same domain, a newer or more sophisticated architecture is not automatically better. What matters more is evaluation: does the new design actually improve task success, reliability, latency, or cost? Evals—and ideally held-out evals and regression suites—should guide architecture decisions rather than architectural novelty itself.
